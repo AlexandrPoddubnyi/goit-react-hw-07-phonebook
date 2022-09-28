@@ -24,6 +24,22 @@ export class App extends Component {
   };
 
 
+  componentDidMount() {
+    const saveData = localStorage.getItem('lsData');
+    const parsedData = JSON.parse(saveData);
+    if (parsedData) {
+      this.setState({ contacts: parsedData });
+    }
+  }
+
+
+  componentDidUpdate(_, prevState) {
+    if (this.state !== prevState) {
+      localStorage.setItem('lsData', JSON.stringify(this.state.contacts));
+    }
+  }
+
+
   onFilter = () => {
     if (this.state.filter === '') {
       return;
@@ -72,6 +88,10 @@ export class App extends Component {
     }))
   
   }
+
+
+
+
 
   render() {
     
