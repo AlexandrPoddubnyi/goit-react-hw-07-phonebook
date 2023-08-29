@@ -1,58 +1,91 @@
-import React, { Component } from "react";
+// import {useState } from "react";
 import { Button, FormBox, Titles, Inputs } from './Form.styled'
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
+import { useDispatch, useSelector } from "react-redux";
+import { addContact } from "../../redux/contactsSlice";
+import { getContacts } from "redux/selectors";
 
 
 
-export class Form extends Component {
+export const Form = () => {
+  
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
-  state = {
-    name: '',
-    number: ''
+  const formSubmit = event => {
+    event.preventDefault();
+    const form = event.target;
+    const formName = form.name.value;
+    const formNumber = form.number.value;
+    if (
+      contacts.find(
+        cont => cont.name.toLowerCase() === formName.toLowerCase()
+      )
+    ) {
+      return alert(`${formName} is already in contacts`);
+    }
+    dispatch(addContact(formName, formNumber));
+    form.reset()
   };
-  userId = nanoid(4);
 
   
-
-  onChange = e => {
-    const { name, value } = e.currentTarget;
-    this.setState({ [name]: value });
-  };
-
-
+  // state = {
+  //   name: '',
+  //   number: ''
+  // };
+  // id = nanoid(4);
 
 
-  onSubmit = evt => {
-    evt.preventDefault();
-    const contact = {
-       id: this.userId,
-      name: this.state.name,
-      number: this.state.number,
-    }
-    
-    this.props.onSubmit(contact)
-    this.reset()
-  };
+  // const [name, setName] = useState('');
+  // const [number, setNumber] = useState('');
+
+  //  const onChange = e => {
+  //    const { name, value } = e.currentTarget;
+  //   // this.setState({ [name]: value });
+  //    switch (name) {
+  //      case 'name':
+  //        setName(value);
+  //        break;
+  //      case 'number':
+  //        setNumber(value);
+  //        break;
+  //      default:
+  //        break;
+  //    }
+  // };
+
+
+  // const handleSubmit = evt => {
+  //   evt.preventDefault();
+  //   const id = nanoid(4)
+  //   // const contact = {
+  //     // id: this.userId,
+  //     // name: this.state.name,
+  //     // number: this.state.number,
+  //   // }
+  //   onSubmit({id,name,number});
+  //   reset();
+  //   // this.props.onSubmit(contact)
+  //   // this.reset()
+  // };
  
 
+  // const reset = () => {
+  //   setName('');
+  //   setNumber('');
+  //   // this.setState({
+  //   //   name: '',
+  //   //   number: ''
+  //   // })
+  // }
 
-  reset = () => {
-    this.setState({
-      name: '',
-      number: ''
-    })
-  }
-
-
-  
-render () {
 
   return (
-    <FormBox onSubmit={this.onSubmit}>
+    <FormBox onSubmit={formSubmit}>
       <Titles>Name</Titles>
       <Inputs
-        value={this.state.name}
-        onChange={this.onChange}
+        // value={name}
+        // onChange={onChange}
         type="text"
         name="name"
         pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -61,8 +94,8 @@ render () {
       />
       <Titles>Number</Titles>
       <Inputs
-        value={this.state.number}
-        onChange={this.onChange}
+        // value={number}
+        // onChange={onChange}
         type="tel"
         name="number"
         pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
@@ -71,5 +104,5 @@ render () {
       />
       <Button type="Submit">Add contact</Button>
     </FormBox>
- )}
-}
+  )
+};
