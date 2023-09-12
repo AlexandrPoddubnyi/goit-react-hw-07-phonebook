@@ -1,27 +1,27 @@
 import { Button, FormBox, Titles, Inputs } from './Form.styled'
 import { useDispatch, useSelector } from "react-redux";
-import { addContact } from "../../redux/contactsSlice";
-import { getContacts } from "redux/selectors";
+import { addContact } from 'redux/operations';
+import { selectContacts } from "redux/selectors";
 
 
 export const Form = () => {
   
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectContacts);
 
   const formSubmit = event => {
     event.preventDefault();
     const form = event.target;
-    const formName = form.name.value;
-    const formNumber = form.number.value;
+    const name = form.name.value;
+    const number = form.number.value;
     if (
       contacts.find(
-        cont => cont.name.toLowerCase() === formName.toLowerCase()
+        cont => cont.name.toLowerCase() === name.toLowerCase()
       )
     ) {
-      return alert(`${formName} is already in contacts`);
+      return alert(`${name} is already in contacts`);
     }
-    dispatch(addContact(formName, formNumber));
+    dispatch(addContact({ name, number }));
     form.reset()
   };
 
